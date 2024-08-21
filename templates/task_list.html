@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="buttons-container">
+        <a href="{% url 'task-add' %}" class="add-task-btn">Add New Task</a>
+    </div>
+
+    <h1>ToDo List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Deadline</th>
+                <th>Tags</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.content }}</td>
+                    <td>
+                        {% if task.is_done %}
+                            <span class="badge bg-success">Done</span>
+                        {% else %}
+                            <span class="badge bg-danger">Not Done</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ task.deadline }}</td>
+                    <td>
+                        {% for tag in task.tags.all %}
+                            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if task.is_done %}
+                            <a href="{% url 'task-toggle-status' task.pk %}" class="btn btn-warning">Undo</a>
+                        {% else %}
+                            <a href="{% url 'task-toggle-status' task.pk %}" class="btn btn-success">Complete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
